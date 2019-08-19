@@ -85,18 +85,26 @@ for i, contour in enumerate(long_contours_subset):
     
     #find x values for contour and where along that contour that x value occurs (aka, y values)
     uniquex, saved_points = find_contour_points(contour, argx_list)
-    uniquex_list.append(uniquex)
     saved_points_list.append(saved_points)
-        
+
     #find y values and ridge points for each contour
     ridge_points = []
-    ridge = find_ridge_points(contour, uniquex, saved_points, data, ridge_points)
+    to_deletex = []
+    
+    ridge, to_deletex = find_ridge_points(contour, to_deletex, uniquex, saved_points, data, ridge_points)
     ridge_points_list.append(ridge)
     
+    #now we need to delete the values that we couldn't find a ridge/trough value from
+    #now they should be the same length
+    uniquex = [x for x in uniquex if x not in to_deletex]    
+    uniquex_list.append(uniquex)
+        
     #find top and bottom troughs/peaks
     top, bottom = find_troughs(uniquex, ridge, data)
     top_list.append(top)
     bottom_list.append(bottom)
+    
+    #print(i, argx_list[i], len(uniquex_list[i]), len(ridge_points_list[i]), len(saved_points_list[i]))
 
 
 fig, ax = plt.subplots(figsize=(12, 8))

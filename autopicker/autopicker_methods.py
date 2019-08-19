@@ -54,7 +54,8 @@ def find_contour_points(contour, argx_list):
 """
 Find ridge structure for all contours.
 """
-def find_ridge_points(contour, uniquex, saved_points, data, ridge_points):
+def find_ridge_points(contour, to_delete, uniquex, saved_points, data, ridge_points):
+    
     for i, point in enumerate(saved_points):
         if(len(point == 2)):
             idx1 = point[0]
@@ -70,12 +71,27 @@ def find_ridge_points(contour, uniquex, saved_points, data, ridge_points):
         y1 = int(contour[idx1, 0])
         y2 = int(contour[idx2, 0])
 
-        if len(data[y2:y1, x]) == 0:
-            ridge_points.append(np.where(data[:, x] == np.max(data[y1:y2, x]))[0])
+        #check to see whether *both* points lie in a ridge or trough (for positive and negative contours)
+        #only contains positive numbers: ridge --> search for troughs later
+        if np.logical_and(data[y1, x] > 0, data[y2, x] > 0):
+            if len(data[y2:y1, x]) == 0:
+                ridge_points.append(np.where(data[:, x] == np.max(data[y1:y2, x]))[0])
+            else:
+                ridge_points.append(np.where(data[:, x] == np.max(data[y2:y1, x]))[0])
+            
+        #only contains negative numbers: trough --> search for ridges later
+        elif np.logical_and(data[y1, x] < 0, data[y2, x] < 0):
+            if len(data[y2:y1, x]) == 0:
+                ridge_points.append(np.where(data[:, x] == np.min(data[y1:y2, x]))[0])
+            else:
+                ridge_points.append(np.where(data[:, x] == np.min(data[y2:y1, x]))[0])
+            
+        #else the points contain both a positive and negative value, we need to skip over that
+        #if we skip over that point, we need to delete it from uniquex and saved_points
         else:
-            ridge_points.append(np.where(data[:, x] == np.max(data[y2:y1, x]))[0])
-        
-    return [elem[0] for elem in ridge_points]
+            to_delete.append(x)
+      
+    return [elem[0] for elem in ridge_points], to_delete
 
 
 
@@ -196,8 +212,42 @@ def find_troughs(uniquex, ridge_points, data):
         #if the point holds a negative value, then we want to
         #find the peaks on either side of it
         else:
-            pass
-            #### NEED TO IMPLEMENT THE SAME THING FOR NEGATIVE CONTOURS #####
+             #if the point holds a positive value, then we want to
+            #find the troughs on either side of it
+            if data[row, col] < 0:
+                #look for top contour
+                for j in range(row, maxrows):
+                    #enter the ridge
+                    if (data[j, col] >= 0):
+                        temptop_idx.append(j)
+                        temptop_points.append(data[j, col])
+
+                        #enterting this if statement would signify leaving the ridge
+                        if data[j+1, col] < 0:
+                            #find the minimum in that column of the trough
+                            ridge_top_max = np.argmin(temptop_points)
+                            top.append(temptop_idx[ridge_top_max])
+
+                            #reset these to empty for the next column
+                            temptop_idx, temptop_points = [], []
+                            break
+
+                #look for bottom contour
+                for k in range(0, row):
+                    #enter the trough
+                    if (data[row-k, col] >= 0):
+                        tempbottom_idx.append(row-k)
+                        tempbottom_points.append(data[row-k, col])
+
+                        #enterting this if statement would signify leaving the trough
+                        if data[row-k-1, col] > 0:
+                            #find the minimum in that column of the trough
+                            ridge_bottom_max = np.argmin(tempbottom_points)
+                            bottom.append(tempbottom_idx[ridge_bottom_max])
+
+                            #reset these to empty for the next column
+                            tempbottom_idx, tempbottom_points = [], []
+                            break
 
     return top, bottom
 

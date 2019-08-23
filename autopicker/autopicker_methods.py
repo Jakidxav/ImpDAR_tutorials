@@ -17,6 +17,15 @@ from skimage.filters import gaussian
 from impdar import *
 
 
+"""
+Find the contours that encircle a given value in a given RadarData object by accessing its
+data attribute.
+"""
+def find_contours(radargram, value):
+    contours = measure.find_contours(radargram.data, value) 
+
+    return contours
+
 
 """
 Find the end points of a given contour (min and max x points), and then find every x point in between those two points.

@@ -1,1 +1,1 @@
-Temporary repository housing my working files for the ImpDAR autopicker, as well as some preliminary tutorials on how the methods I have implemented work.
+Welcome to this repository! Included, you will find some preliminary tutorials on many of [ImpDAR](https://github.com/dlilien/ImpDAR)'s loading, plotting, and processing methods. However, this repository and its tutorials are not meant to be comprehensive. If you still have questions, please refer to the ImpDAR's extensive [documentation](https://impdar.readthedocs.io/en/latest/).

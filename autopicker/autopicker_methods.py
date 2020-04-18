@@ -1,11 +1,4 @@
-import os
-import netCDF4 as nc
 import numpy as np
-import pandas as pd
-
-import copy
-
-import scipy.io as io
 
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import cm

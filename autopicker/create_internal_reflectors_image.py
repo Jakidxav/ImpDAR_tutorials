@@ -20,8 +20,8 @@ from autopicker_methods import *
 
 
 #files on disk
-green_image = '../images/nline5.png'
-green_mat = '../data/nline5_migtk_cropped.mat'
+green_image = './images/nline5.png'
+green_mat = './data/nline5.mat'
 
 #min and max for colorbar plotting
 mini = -8.774235248565674
@@ -136,7 +136,7 @@ for i, contour in enumerate(long_contours_subset):
 
 ax.set_ylim(3000, 500)
 
-plt.savefig('internal_reflectors1.pdf', format='pdf', bbox_inches='tight')
+#plt.savefig('internal_reflectors1.pdf', format='pdf', bbox_inches='tight')
 
 
 

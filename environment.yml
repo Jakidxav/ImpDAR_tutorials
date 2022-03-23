@@ -6,5 +6,5 @@ dependencies:
   - numpy
   - pip
   - pip:
-    - impdar
     - matplotlib
+    - impdar=1.0

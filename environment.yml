@@ -7,4 +7,4 @@ dependencies:
   - pip
   - pip:
     - matplotlib
-    - impdar==1.0
+    - impdar==1.1.4

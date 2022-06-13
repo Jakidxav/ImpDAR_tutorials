@@ -1,0 +1,11 @@
+name: base-environment
+channels:
+  - conda-forge
+dependencies:
+  - python
+  - numpy
+  - gdal
+  - pip
+  - pip:
+    - matplotlib
+    - impdar
